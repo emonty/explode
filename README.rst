@@ -12,6 +12,4 @@ data structure, or a yaml or json representation of one, into a
 directory structure with text files.
 
 * Free software: Apache license
-* Documentation: http://docs.openstack.org/developer/explode
-* Source: http://git.openstack.org/cgit/stackforge/explode
-* Bugs: http://bugs.launchpad.net/explode
+* Source: http://github.com/emonty/explode
