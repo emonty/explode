@@ -21,7 +21,6 @@ import os
 import sys
 
 import pbr.version
-import yaml
 
 __version__ = pbr.version.VersionInfo('explode').version_string()
 
@@ -84,7 +83,7 @@ def main():
     try:
         data = json.loads(intext)
     except ValueError:
-        data = yaml.load(intext)
+        logging.error("Can't parse input data")
     explode_data(data, args.outdir)
 
 if __name__ == '__main__':
