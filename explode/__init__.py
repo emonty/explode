@@ -58,7 +58,7 @@ def setup_logging(debug=False):
             format='%(asctime)s %(levelname)s %(name)s: %(message)s')
 
 
-def main():
+def get_arg_parser():
     parser = argparse.ArgumentParser(
         prog='explode',
         description='Explode turns yaml/json into directories and files.')
@@ -70,7 +70,11 @@ def main():
     parser.add_argument(
         'outdir', default='.', nargs='?',
         help='Root directory to write into. (default current dir)')
-    args = parser.parse_args()
+    return parser
+
+def main():
+
+    args = get_arg_arpser().parse_args()
 
     setup_logging(args.debug)
 
