@@ -16,6 +16,7 @@
 
 import argparse
 import json
+import logging
 import os
 import sys
 
@@ -27,37 +28,64 @@ __version__ = pbr.version.VersionInfo('explode').version_string()
 
 def explode_data(data, path='output'):
     if type(data) is dict:
+        logging.debug("Exploding dict")
         for (k, v) in data.items():
+            logging.debug("Recursing to key {0}".format(k))
             explode_data(v, os.path.join(path, k))
     elif type(data) is list:
+        logging.debug("Exploding list")
         for x in range(0, len(data)):
+            logging.debug("Recursing to list element {0}".format(str(x)))
             explode_data(data[x], os.path.join(path, str(x)))
     else:
-        if not os.path.isdir(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
+        logging.debug("Writing {data} to {path}".format(
+            data=data, path=path))
+        base_dir = os.path.dirname(path)
+        if not os.path.isdir(base_dir):
+            logging.debug("Making base directory {0}".format(base_dir))
+            os.makedirs(base_dir)
         with open(path, 'w') as outfile:
             outfile.write(str(data))
             outfile.write('\n')
 
 
+def setup_logging(debug=False):
+        if debug:
+            level=logging.DEBUG
+        else:
+            level=logging.INFO
+        logging.basicConfig(
+            level=level,
+            format='%(asctime)s %(levelname)s %(name)s: %(message)s')
+
+
 def main():
     parser = argparse.ArgumentParser(
+        prog='explode',
         description='Explode turns yaml/json into directories and files.')
     parser.add_argument('--version', action='version', version=__version__,
                         help='show version')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='show DEBUG level logging')
     parser.add_argument('infile', help='File to process')
-    parser.add_argument('outdir', help='Root directory to write into')
+    parser.add_argument(
+        'outdir', default='.', nargs='?',
+        help='Root directory to write into. (default current dir)')
     args = parser.parse_args()
 
-    intext = open(args.infile).read()
-    outpath = sys.argv[2]
+    setup_logging(args.debug)
+
+    if args.infile == '-':
+        infile = sys.stdin
+    else:
+        infile = open(args.infile)
+
+    intext = infile.read()
     try:
         data = json.loads(intext)
     except ValueError:
         data = yaml.load(intext)
-    explode_data(data, args.outpath)
+    explode_data(data, args.outdir)
 
 if __name__ == '__main__':
     main()
