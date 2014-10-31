@@ -50,9 +50,9 @@ def explode_data(data, path='output'):
 
 def setup_logging(debug=False):
         if debug:
-            level=logging.DEBUG
+            level = logging.DEBUG
         else:
-            level=logging.INFO
+            level = logging.INFO
         logging.basicConfig(
             level=level,
             format='%(asctime)s %(levelname)s %(name)s: %(message)s')
