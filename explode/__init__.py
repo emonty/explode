@@ -14,11 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import json
 import os
 import sys
 
+import pbr.version
 import yaml
+
+__version__ = pbr.version.VersionInfo('explode').version_string()
 
 
 def explode_data(data, path='output'):
@@ -37,13 +41,23 @@ def explode_data(data, path='output'):
 
 
 def main():
-    intext = open(sys.argv[1]).read()
+    parser = argparse.ArgumentParser(
+        description='Explode turns yaml/json into directories and files.')
+    parser.add_argument('--version', action='version', version=__version__,
+                        help='show version')
+    parser.add_argument('--debug', dest='debug', action='store_true',
+                        help='show DEBUG level logging')
+    parser.add_argument('infile', help='File to process')
+    parser.add_argument('outdir', help='Root directory to write into')
+    args = parser.parse_args()
+
+    intext = open(args.infile).read()
     outpath = sys.argv[2]
     try:
-        x = json.loads(intext)
+        data = json.loads(intext)
     except ValueError:
-        x = yaml.load(intext)
-    explode_data(x, outpath)
+        data = yaml.load(intext)
+    explode_data(data, args.outpath)
 
 if __name__ == '__main__':
     main()
