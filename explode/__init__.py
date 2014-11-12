@@ -49,7 +49,7 @@ def explode_data(data, path='output'):
             outfile.write('\n')
 
 
-def setup_logging(debug=False):
+def _setup_logging(debug=False):
         if debug:
             level = logging.DEBUG
         else:
@@ -59,7 +59,7 @@ def setup_logging(debug=False):
             format='%(asctime)s %(levelname)s %(name)s: %(message)s')
 
 
-def get_arg_parser():
+def _get_arg_parser():
     parser = argparse.ArgumentParser(
         prog='explode',
         description='Explode turns yaml/json into directories and files.')
@@ -73,11 +73,11 @@ def get_arg_parser():
         help='Root directory to write into. (default current dir)')
     return parser
 
+
 def main():
+    args = _get_arg_parser().parse_args()
 
-    args = get_arg_arpser().parse_args()
-
-    setup_logging(args.debug)
+    _setup_logging(args.debug)
 
     if args.infile == '-':
         infile = sys.stdin
