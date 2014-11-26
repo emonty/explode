@@ -75,7 +75,7 @@ def get_arg_parser():
 
 def main():
 
-    args = get_arg_arpser().parse_args()
+    args = get_arg_parser().parse_args()
 
     setup_logging(args.debug)
 
